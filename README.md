@@ -10,7 +10,7 @@ npm install -g sqlcmdjs
 ## Usage
 
 ```
-sqlcmd -s <server> -u <username> -p <password> [-d <database>] [-t <timeout>] [-m param1=foo -m param2=bar ...] <script>
+sqlcmd -s <server> -u [<domain>\]<username> -p <password> [-d <database>] [-t <timeout>] [-m param1=foo -m param2=bar ...] <script>
 ```
 
 If no script is specified, sqlcmd reads from the standard input.
@@ -29,13 +29,22 @@ Run a script from file:
 cat script.sql | sqlcmd -s 127.0.0.1 -u sa -p p@ssw0rd
 ```
 
-Run a script and supply template parameter values:
+Run a script and supply template parameter values using the Management Studio format:
+
+```
+sqlcmd -s 127.0.0.1 -u sa -p p@ssw0rd "select name from sys.databases where database_id = $(database_id)" -m database_id=1
+```
+
+Run a script and supply template parameter values using the sqlcmd.exe format:
 
 ```
 sqlcmd -s 127.0.0.1 -u sa -p p@ssw0rd "select name from sys.databases where database_id = $(database_id)" -m database_id=1
 ```
 
 ## Version History
++ **1.4**
+  + Added support for Windows domains.
+  + Added support for sqlcmd.exe style template parameters. (Thanks [gunesmes](https://github.com/gunesmes))
 + **1.3**
   + Added support for template parameters.
 + **1.2**

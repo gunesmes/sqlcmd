@@ -96,12 +96,29 @@ function replaceTemplateParams(script, callback) {
     return value;
   });
 
+  var script = script.replace(/\$\((\w+)\)/g, function(match, name) {
+    var value = params[name];
+
+    if (!value)
+      return callback(new Error('No value for param: ' + name));
+
+    return value;
+  });
+
   callback(null, script);
 }
 
 function connectToServer(callback) {
+  var match = /^(.*)\\(.*)$/.exec(argv.user);
+
+  if (match) {
+    argv.domain = match[1];
+    argv.user = match[2];
+  }
+
   var config = {
     server: argv.server,
+    domain: argv.domain,
     user: argv.user,
     password: argv.password,
     database: argv.database || 'master',
